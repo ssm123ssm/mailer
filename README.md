@@ -6,6 +6,8 @@
 
 ### [This is the app hosted on heroku](https://mailer-ssm.herokuapp.com)
 
+### You don't even have to expose your email address in the form!
+
 If you are a front-end web designer and you have forms in your website, 
 you have to add back-end logic and admin panels to view the data submitted through that form.
 
