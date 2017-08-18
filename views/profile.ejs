@@ -1,0 +1,77 @@
+<%-include head%>
+
+    <body ng-app='myApp' ng-controller='ctrl'>
+        <%-include ok_navbar%>
+
+            <div class="container-fluid">
+                <div class="myProjects mt-5 mb-5" ng-init="loadMyProjects()">
+                    <div class="h2">My Projects</div>
+
+                    <hr>
+                    <div ng-repeat="project in myProjects">
+
+                        <div class="row justify-content-center mb-3">
+                            <div class="col-3 scrl">
+                                <b>{{project.name}}</b><br>
+                                <button type="button" class="mt-2 btn btn-outline-primary btn-sm" ng-click="remove(project.name)">
+                                Remove
+                                </button>
+                            </div>
+                            <div class="col-8 scrl">
+                                <b>Link: </b>site.com/mailer?id={{project.id}}
+
+                                <div class="scrl mt-2">
+                                    <b>Redirect: </b>{{project.redirect}}
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+
+                    </div>
+                </div>
+
+                <div class="h2">Add a Project</div>
+                <hr>
+                <div class="row justify-content-center">
+                    <div class="col-10">
+                        <form class="mb-5">
+
+                            <div class="form-group text-left" id="project_group">
+                                <label class="form-control-label black" for="project_field">Name your Project</label>
+                                <input type="text" class="form-control mb-2" id="project_field" placeholder="Project Name">
+                                <div id="project_feedback"></div>
+                            </div>
+
+                            <div class="form-check">
+                                <label class="form-check-label">
+    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="default_redirect_radio" value="default" checked> Use default redirect
+  </label>
+                            </div>
+                            <div class="form-check">
+                                <label class="form-check-label">
+    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="custom_redirect_radio" value="custom"> Use custom redirect page
+  </label>
+                            </div>
+
+
+                            <div class="form-group text-left" id="redirect_group">
+                                <label class="form-control-label black" for="redirect_field">Where to redirect after form submission</label>
+                                <input type="text" class="form-control mb-2" id="redirect_field" placeholder="Where to redirect?">
+                                <div id="redirect_feedback"></div>
+                            </div>
+
+
+
+
+                            <button type="button" class="btn btn-primary" id="submit_project_btn">Submit</button>
+                        </form>
+                    </div>
+                    <div class="result">
+
+                    </div>
+                </div>
+
+
+    </body>
+
+    </html>

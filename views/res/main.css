@@ -1,0 +1,113 @@
+html,
+body {
+    padding: 0;
+    margin: 0;
+}
+
+.back {
+    background-image: url(back2.jpeg);
+    background-size: cover;
+}
+
+.cont {
+    margin: 0;
+    height: 100%;
+    width: 100%;
+    padding: 20px;
+}
+
+.cont2 {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.login-form {
+    margin: auto;
+}
+
+.frm {
+    padding: 30px;
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 20px;
+    margin: auto;
+}
+
+.frm2 {
+    top: 0;
+}
+
+#login_btn {
+    width: 80%;
+}
+
+.log-head {
+    color: #ffffff;
+    font-size: 4vw;
+    font-family: 'Raleway', sans-serif;
+}
+
+.small {
+    font-size: 30px;
+}
+
+.footer {
+    display: block;
+    z-index: -1;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    width: 100%;
+    font-size: 15px;
+    padding-top: 30px;
+    border-top: 1px solid white;
+    color: white;
+}
+
+.form-control-label {
+    color: white;
+}
+
+.outer {
+    height: 100vh;
+    padding: 20px;
+}
+
+.outer2 {
+    height: 100vh;
+    padding: 20px;
+    margin: auto;
+    display: table;
+}
+
+.black {
+    color: black;
+}
+
+.scrl {
+    overflow: auto;
+}
+
+#redirect_group {
+    display: none;
+}
+
+#submit_project_btn {
+    display: block;
+}
+
+.medium {
+    font-size: 30px;
+}
+
+.add {
+    font-size: 20px;
+}
+
+.add:hover {
+    text-decoration: none;
+}
+
+
+
+.fix-width {
+    min-width: 435px;
+}
