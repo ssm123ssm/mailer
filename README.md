@@ -39,4 +39,4 @@ You can remove your projects anytime you want and the URL generated for that pro
 
 ### If you have any question, or have any suggestion to improve Mailer, contact me at ssm123ssm@gmail.com. 
 
-### If you'd like to collaborate on this project, please contact me on abouve email address.
+### If you'd like to collaborate on this project, please contact me on above email address.
