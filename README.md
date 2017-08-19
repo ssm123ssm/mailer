@@ -1,8 +1,7 @@
 # Mailer is an open-source platform for form submissions.
 
-bq(subtitle). A tool for getting form data on web pages as an email, without a single line of back-end coding.
-bq(byline). (C) 2017 | By ssm123ssm
-
+A tool for getting form data on web pages as an email, without having to write a single line of server-side code.
+2017 | By ssm123ssm
 
 
 
