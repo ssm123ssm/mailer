@@ -1,5 +1,7 @@
 # Mailer is an open-source platform for form submissions.
 
+[![Join the chat at https://gitter.im/mailer-ssm/Lobby](https://badges.gitter.im/mailer-ssm/Lobby.svg)](https://gitter.im/mailer-ssm/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 A tool for getting form data on web pages as an email, without having to write a single line of server-side code.
 2017 | By ssm123ssm
 
