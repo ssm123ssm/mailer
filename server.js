@@ -16,11 +16,11 @@ var transporter = nodemailer.createTransport({
         pass: process.env.MAILPW
     }
 });
-
 var mail_template = require('./views/welcome_mail');
 var dburl = process.env.DBURL;
 var port = process.env.PORT;
 var app = express();
+
 
 app.use(express.static(`${__dirname}/views`));
 app.use(bodyParser.json()); // to support JSON-encoded bodies
@@ -32,17 +32,15 @@ app.use(session({
 }));
 app.set('vew engine', 'ejs');
 
+//PASSPORT FOR AUTHENTICATION
 app.use(passport.initialize());
 app.use(passport.session());
-
 passport.serializeUser(function (user, done) {
     done(null, user);
 });
 passport.deserializeUser(function (user, done) {
     done(null, user);
 });
-
-////////
 passport.use(new Strategy(
     function (username, password, done) {
         mongo.connect(dburl, function (err, db) {
@@ -77,18 +75,29 @@ passport.use(new Strategy(
         });
 
     }));
-////////
 
 
+//ROUTES
 
+//HOME PAGE
+app.get('/', function (req, res) {
+    res.render('home.ejs', {});
+});
 
+//SIGN UP PAGE
+app.get('/signup', function (req, res) {
+    console.log('\nSIGNUP ROUTE GET');
+    res.render('signup.ejs');
+});
+
+//POSTING SIGNUP DATA
 app.post('/signup', function (req, res) {
     console.log('\nSIGNUP ROUTE POST');
     var username = req.body.username.toLowerCase();
     var email = req.body.email;
+    
+    //PASSWORD IS HASHED WITH MD-5 AND THAT DIGEST IS STORED AT THE DATABASE
     var hash = md5(req.body.password);
-    console.log(`${username} : ${hash}`);
-    //console.log(`HASH: ${hash}`);
     mongo.connect(dburl, function (err, db) {
         if (err) {
             console.log(err);
@@ -109,13 +118,10 @@ app.post('/signup', function (req, res) {
                     if (ress.length > 0) {
                         console.log('User exists');
                         res.json({
-                            //                            alert: 'Username taken',
                             log: 'Username taken',
                             code: 101
                         });
-                        //res.send('DONE');
                     } else {
-
                         col.find({
                             email: email
                         }).toArray(function (err, results) {
@@ -125,7 +131,6 @@ app.post('/signup', function (req, res) {
                                 if (results.length > 0) {
                                     console.log('email taken');
                                     res.json({
-
                                         code: 750
                                     });
                                 } else {
@@ -144,7 +149,7 @@ app.post('/signup', function (req, res) {
                                     });
                                     console.log('DONE');
 
-                                    ////Welcome Msg
+                                    ////SENDING THE WELCOME MESSAGE
 
                                     var html = mail_template.mail;
 
@@ -163,13 +168,6 @@ app.post('/signup', function (req, res) {
                                         }
                                         console.log('Message %s sent: %s', info.messageId, info.response);
                                     });
-
-
-                                    ///
-
-
-
-
                                 }
                             }
                         });
@@ -181,6 +179,9 @@ app.post('/signup', function (req, res) {
         }
     });
 });
+
+/*POSTING DATA THROUGH HOME PAGE (LOGIN PAGE)
+IF AUTHENTICATION SUCCESS, DIRECTED TO /SUCCESS, OTHERWISE TO /FAIL*/
 app.post('/login',
     passport.authenticate('local', {
         failureRedirect: '/fail'
@@ -188,14 +189,31 @@ app.post('/login',
     function (req, res) {
         res.redirect('/success');
     });
-app.get('/', function (req, res) {
-    res.render('home.ejs', {});
-});
-app.post('/submit_project', function (req, res) {
+app.get('/success', function (req, res) {
+    if (req.user) {
+        res.json({
+            redirect: '/profile'
+        });
+    } else {
+        res.json({
+            alert: 'Logged in as GUEST',
+            redirect: '/fail'
 
+        });
+    }
+});
+app.get('/fail', function (req, res) {
+    res.json({
+        alert: 'Login Failure. Please check username and password.'
+    });
+});
+
+/*SUBMITTING A NEW PROJECT WITH SUBIT BUTTON ON PROFILE PAGE*/
+app.post('/submit_project', function (req, res) {
     var project = req.body.project;
     var id = Date.now();
 
+    //IF NOT LOGGED IN ALERT THE USER
     if (!req.user) {
         res.json({
             alert: 'Please log in to submit projects...'
@@ -220,7 +238,7 @@ app.post('/submit_project', function (req, res) {
                             alert: 'Error connecting to database'
                         });
                     } else {
-                        //Finding for existance
+                        //FINDIN IF A PROJECT WITH THE SAME NAME EXISTS
                         var exists = false;
                         ress[0].projects.forEach(function (item) {
                             if (item.name == project) {
@@ -257,6 +275,8 @@ app.post('/submit_project', function (req, res) {
     }
 });
 
+
+/*REMOVING A PROJECTS WITH REMOVE BUTTON UNDER MY PROJECTS*/
 app.post('/remove', function (req, res) {
     if (!req.user) {
         res.json({
@@ -305,38 +325,14 @@ app.post('/remove', function (req, res) {
         });
     }
 });
-app.get('/signup', function (req, res) {
-    console.log('\nSIGNUP ROUTE GET');
-    res.render('signup.ejs');
-});
 
-app.get('/login', function (req, res) {
-    console.log('\nLOGIN ROUTE GET');
-    res.render('login.ejs');
-});
+//LOGGING OUT THE USER
 app.get('/logout', function (req, res) {
     req.logout();
     res.redirect('/');
 });
-app.get('/success', function (req, res) {
-    if (req.user) {
-        res.json({
-            redirect: '/profile'
-        });
-    } else {
-        res.json({
-            alert: 'Logged in as GUEST',
-            redirect: '/fail'
 
-        });
-    }
-});
-app.get('/fail', function (req, res) {
-    res.json({
-        alert: 'Login Failure. Please check username and password.'
-    });
-});
-
+/*SENT THE USER HERE FROM SUCCESS ROUTE AFTER AUTHENTICATION*/
 app.get('/profile', function (req, res) {
     if (req.user) {
         console.log(req.user);
@@ -349,6 +345,8 @@ app.get('/profile', function (req, res) {
         //        res.send('Authentication error! Please log in');
     }
 });
+
+/*GETTING USER'S PROJECT WITH ANGULAR*/
 app.get('/myProjects', function (req, res) {
     if (req.user) {
         mongo.connect(dburl, function (err, db) {
@@ -390,6 +388,7 @@ app.get('/myProjects', function (req, res) {
     }
 });
 
+/*GETTING FORM DATA*/
 app.post('/mailer', function (req, res) {
     console.log('\nMAILER ROUTE');
     var message = req.body;
@@ -460,9 +459,12 @@ app.post('/mailer', function (req, res) {
     });
 });
 
+/*IF DEFAULT REDIRECT WAS SELECTED, THIS THANK YOU PAGE IS DISPLAYED*/
 app.get('/default_redirect', function (req, res) {
     res.render('default_redirect.ejs');
 });
+
+/*HOW TO PAGE*/
 app.get('/howto', function (req, res) {
     if (req.user) {
         res.render('howto.ejs', req.user);
@@ -475,6 +477,7 @@ app.get('/howto', function (req, res) {
     }
 });
 
+/*STARTING THE SERVER*/
 app.listen(port, function () {
     console.log(`App started on port ${port}`);
 });
