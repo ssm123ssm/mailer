@@ -5,6 +5,7 @@
 A tool for getting form data on web pages as an email, without having to write a single line of server-side code.
 2017 | By ssm123ssm
 
+<img src="./gif.gif" style="width=100%;" alt="Mailer in Action">
 
 
 ### [This is the app hosted on heroku](https://mailer-ssm.herokuapp.com)
