@@ -101,8 +101,8 @@ app.post('/signup', function (req, res) {
     var hash = md5(req.body.password);
 
     //VALIDATING EMAIL
-    emailCheck(email).then(function (res) {
-        if (res) {
+    emailCheck(email).then(function (stat) {
+        if (stat) {
             mongo.connect(dburl, function (err, db) {
                 if (err) {
                     console.log(err);
