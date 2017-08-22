@@ -7,6 +7,7 @@ var passport = require('passport');
 var Strategy = require('passport-local').Strategy;
 var md5 = require('md5');
 var nodemailer = require('nodemailer');
+var emailCheck = require('email-check');
 var transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
     port: 465,
@@ -95,89 +96,105 @@ app.post('/signup', function (req, res) {
     console.log('\nSIGNUP ROUTE POST');
     var username = req.body.username.toLowerCase();
     var email = req.body.email;
-    
+
     //PASSWORD IS HASHED WITH MD-5 AND THAT DIGEST IS STORED AT THE DATABASE
     var hash = md5(req.body.password);
-    mongo.connect(dburl, function (err, db) {
-        if (err) {
-            console.log(err);
-            res.json({
-                alert: 'Cannot connect to db'
-            });
-        } else {
-            var col = db.collection('data');
-            col.find({
-                username: username
-            }).toArray(function (err, ress) {
+
+    //VALIDATING EMAIL
+    emailCheck(email).then(function (res) {
+        if (res) {
+            mongo.connect(dburl, function (err, db) {
                 if (err) {
                     console.log(err);
                     res.json({
-                        alert: 'db err'
+                        alert: 'Cannot connect to db'
                     });
                 } else {
-                    if (ress.length > 0) {
-                        console.log('User exists');
-                        res.json({
-                            log: 'Username taken',
-                            code: 101
-                        });
-                    } else {
-                        col.find({
-                            email: email
-                        }).toArray(function (err, results) {
-                            if (err) {
-                                console.log(err);
+                    var col = db.collection('data');
+                    col.find({
+                        username: username
+                    }).toArray(function (err, ress) {
+                        if (err) {
+                            console.log(err);
+                            res.json({
+                                alert: 'db err'
+                            });
+                        } else {
+                            if (ress.length > 0) {
+                                console.log('User exists');
+                                res.json({
+                                    log: 'Username taken',
+                                    code: 101
+                                });
                             } else {
-                                if (results.length > 0) {
-                                    console.log('email taken');
-                                    res.json({
-                                        code: 750
-                                    });
-                                } else {
-                                    var user = {};
-                                    user.username = username;
-                                    user.hash = hash;
-                                    user.email = email;
-                                    user.key = `mailerkey${Date.now()}`;
-                                    user.projects = [];
-                                    col.insert(user);
-                                    res.json({
-                                        alert: 'Thank you. Log in with your credentials.',
-                                        log: user.key,
-                                        code: 100,
-                                        redirect: '/'
-                                    });
-                                    console.log('DONE');
+                                col.find({
+                                    email: email
+                                }).toArray(function (err, results) {
+                                    if (err) {
+                                        console.log(err);
+                                    } else {
+                                        if (results.length > 0) {
+                                            console.log('email taken');
+                                            res.json({
+                                                code: 750
+                                            });
+                                        } else {
+                                            var user = {};
+                                            user.username = username;
+                                            user.hash = hash;
+                                            user.email = email;
+                                            user.key = `mailerkey${Date.now()}`;
+                                            user.projects = [];
+                                            col.insert(user);
+                                            res.json({
+                                                alert: 'Thank you. Log in with your credentials.',
+                                                log: user.key,
+                                                code: 100,
+                                                redirect: '/'
+                                            });
+                                            console.log('DONE');
 
-                                    ////SENDING THE WELCOME MESSAGE
+                                            ////SENDING THE WELCOME MESSAGE
 
-                                    var html = mail_template.mail;
+                                            var html = mail_template.mail;
 
-                                    let mailOptions = {
-                                        from: 'mailer', // sender address
-                                        to: email, // list of receivers
-                                        subject: `Welcome to Mailer, ${username}!`, // Subject line
-                                        text: 'Welcome to Mailer!', // plain text body
-                                        html: html // html body
-                                    };
+                                            let mailOptions = {
+                                                from: 'mailer', // sender address
+                                                to: email, // list of receivers
+                                                subject: `Welcome to Mailer, ${username}!`, // Subject line
+                                                text: 'Welcome to Mailer!', // plain text body
+                                                html: html // html body
+                                            };
 
-                                    // send mail with defined transport object
-                                    transporter.sendMail(mailOptions, (error, info) => {
-                                        if (error) {
-                                            return console.log(error);
+                                            // send mail with defined transport object
+                                            transporter.sendMail(mailOptions, (error, info) => {
+                                                if (error) {
+                                                    return console.log(error);
+                                                }
+                                                console.log('Message %s sent: %s', info.messageId, info.response);
+                                            });
                                         }
-                                        console.log('Message %s sent: %s', info.messageId, info.response);
-                                    });
-                                }
+                                    }
+                                });
+
+
                             }
-                        });
-
-
-                    }
+                        }
+                    });
                 }
             });
+        } else {
+
+            res.json({
+                alert: "Invalid email address!",
+                log: "Invalid email address",
+                code: 105
+            });
         }
+    }).catch(function (err) {
+        console.log(err);
     });
+
 });
 
 /*POSTING DATA THROUGH HOME PAGE (LOGIN PAGE)
