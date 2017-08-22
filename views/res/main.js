@@ -229,42 +229,46 @@ $(function () {
     });
 
     $('#submit_project_btn').click(function () {
-        $('#project_group').removeClass('has-danger');
-        $('#project_group').removeClass('has-success');
-        $('#project_field').removeClass('form-control-success');
-        $('#project_field').removeClass('form-control-danger');
-        $('#project_feedback').html('');
-        var project = $('#project_field').val();
-        var redirect = $("#redirect_field").val();
+        if ($("#project_filed").val() != '') {
+            $('#project_group').removeClass('has-danger');
+            $('#project_group').removeClass('has-success');
+            $('#project_field').removeClass('form-control-success');
+            $('#project_field').removeClass('form-control-danger');
+            $('#project_feedback').html('');
+            var project = $('#project_field').val();
+            var redirect = $("#redirect_field").val();
 
-        var submission = {};
-        submission.project = project;
-        if ($("#custom_redirect_radio").is(':checked') && redirect != '') {
-            submission.redirect = redirect;
-        }
-        $.post('/submit_project', submission, function (json) {
-            code(json);
-            if (json.code == 400) {
+            var submission = {};
+            submission.project = project;
+            if ($("#custom_redirect_radio").is(':checked') && redirect != '') {
+                submission.redirect = redirect;
+            }
+            $.post('/submit_project', submission, function (json) {
+                code(json);
+                if (json.code == 400) {
 
-                $('#project_group').addClass('has-success');
-                $('#project_field').addClass('form-control-success');
+                    $('#project_group').addClass('has-success');
+                    $('#project_field').addClass('form-control-success');
 
-                var scope = angular.element("body").scope();
-                for (var i = 0; i < json.projects.length; i++) {
-                    if (!json.projects[i].redirect) {
-                        json.projects[i].redirect = 'Default'
+                    var scope = angular.element("body").scope();
+                    for (var i = 0; i < json.projects.length; i++) {
+                        if (!json.projects[i].redirect) {
+                            json.projects[i].redirect = 'Default'
+                        }
                     }
+                    scope.$apply(function () {
+                        scope.myProjects = json.projects;
+                    });
                 }
-                scope.$apply(function () {
-                    scope.myProjects = json.projects;
-                });
-            }
-            if (json.code == 300) {
-                $('#project_group').addClass('has-danger');
-                $('#project_field').addClass('form-control-danger');
-                $('#project_feedback').html('The Project name exists!');
-            }
-        });
+                if (json.code == 300) {
+                    $('#project_group').addClass('has-danger');
+                    $('#project_field').addClass('form-control-danger');
+                    $('#project_feedback').html('The Project name exists!');
+                }
+            });
+        } else {
+            alert('Project name cannot be empty!');
+        }
     });
     $('#custom_redirect_radio').click(function () {
         $("#redirect_group").css('display', 'block');
