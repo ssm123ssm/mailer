@@ -193,6 +193,11 @@ app.post('/signup', function (req, res) {
         }
     }).catch(function (err) {
         console.log(err);
+        res.json({
+            alert: "Invalid email address!",
+            log: "Invalid email address",
+            code: 105
+        });
     });
 
 });
