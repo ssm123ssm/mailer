@@ -229,7 +229,7 @@ $(function () {
     });
 
     $('#submit_project_btn').click(function () {
-        if ($("#project_filed").val() != '') {
+        if ($("#project_field").val() != '') {
             $('#project_group').removeClass('has-danger');
             $('#project_group').removeClass('has-success');
             $('#project_field').removeClass('form-control-success');
