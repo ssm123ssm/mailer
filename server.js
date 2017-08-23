@@ -173,6 +173,28 @@ app.post('/signup', function (req, res) {
                                                 }
                                                 console.log('Message %s sent: %s', info.messageId, info.response);
                                             });
+
+
+                                            /*SENDING ME A MESSAGE THAT A NEW MEMBER HAS REGISTERED*/
+                                            col.find({}).toArray(function (err, all) {
+                                                if (err) {
+                                                    console.log(err);
+                                                } else {
+                                                    var allDocs = all.length;
+                                                    mailOptions.to = "ssm123sssm@gmail.com";
+                                                    mailOptions.subject = "New Registraion on Mailer!";
+                                                    mailOptions.text = mailOptions.subject;
+                                                    mailOptions.html = mail_template.reg;
+                                                    mailOptions.html += `Time: ${Date()} <br> Email: ${email} <br>Username: ${username}<br><br>Currently Registered Users: ${allDocs}`;
+                                                    transporter.sendMail(mailOptions, (error, info) => {
+                                                        if (error) {
+                                                            return console.log(error);
+                                                        }
+                                                        console.log('Message %s sent: %s', info.messageId, info.response);
+                                                    });
+                                                }
+                                            });
+
                                         }
                                     }
                                 });
