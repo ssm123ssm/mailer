@@ -197,7 +197,7 @@ app.post('/signup', function (req, res) {
                                                             return console.log(error);
                                                         }
                                                         console.log("\n\nMAIL SENT!");
-                                                        console.log('\n\nMessage sent to YOU');
+                                                        console.log('\n\n', info);
                                                     });
                                                 }
                                             });
