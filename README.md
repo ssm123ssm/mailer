@@ -9,6 +9,7 @@ A tool for getting form data on web pages as an email, without having to write a
 
 
 ### [This is the app hosted on heroku](https://mailer-ssm.herokuapp.com)
+#### [Android App release 1.0](./app-release.apk) 
 
 ### You don't even have to expose your email address in the form!
 
