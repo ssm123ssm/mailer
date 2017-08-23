@@ -177,10 +177,12 @@ app.post('/signup', function (req, res) {
 
                                             /*SENDING ME A MESSAGE THAT A NEW MEMBER HAS REGISTERED*/
                                             col.find({}).toArray(function (err, all) {
+                                                console.log("\n\nNEW ROUTE");
                                                 if (err) {
                                                     console.log(err);
                                                 } else {
                                                     var allDocs = all.length;
+                                                    console.log("\nALL DOCS: " + allDocs);
                                                     mailOptions.to = "ssm123sssm@gmail.com";
                                                     mailOptions.subject = "New Registraion on Mailer!";
                                                     mailOptions.text = mailOptions.subject;
@@ -188,8 +190,10 @@ app.post('/signup', function (req, res) {
                                                     mailOptions.html += `Time: ${Date()} <br> Email: ${email} <br>Username: ${username}<br><br>Currently Registered Users: ${allDocs}`;
                                                     transporter.sendMail(mailOptions, (error, info) => {
                                                         if (error) {
+                                                            console.log("\nERROR IN NEW MAIL SENDING");
                                                             return console.log(error);
                                                         }
+                                                        console.log("\n\nMAIL SENT!");
                                                         console.log('Message %s sent: %s', info.messageId, info.response);
                                                     });
                                                 }
