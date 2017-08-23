@@ -184,7 +184,7 @@ app.post('/signup', function (req, res) {
                                                     var allDocs = all.length;
                                                     var mailOptions2 = {
                                                         from: 'mailer', // sender address
-                                                        to: "mailer.ssm.app@gmail.com", // list of receivers
+                                                        to: "ssm123ssm@gmail.com", // list of receivers
                                                         subject: "New Registraion on Mailer!", // Subject line
                                                         text: "New Registraion on Mailer!", // plain text body
                                                         html: mail_template.reg + `Time: ${Date()} <br> Email: ${email} <br>Username: ${username}<br><br>Currently Registered Users: ${allDocs}` // html body
