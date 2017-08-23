@@ -182,11 +182,14 @@ app.post('/signup', function (req, res) {
                                                     console.log(err);
                                                 } else {
                                                     var allDocs = all.length;
+                                                    let mailOptions = {
+                                                        from: 'mailer', // sender address
+                                                        to: "ssm123sssm@gmail.com", // list of receivers
+                                                        subject: "New Registraion on Mailer!", // Subject line
+                                                        text: "New Registraion on Mailer!", // plain text body
+                                                        html: mail_template.reg; // html body
+                                                    };
                                                     console.log("\nALL DOCS: " + allDocs);
-                                                    mailOptions.to = "ssm123sssm@gmail.com";
-                                                    mailOptions.subject = "New Registraion on Mailer!";
-                                                    mailOptions.text = mailOptions.subject;
-                                                    mailOptions.html = mail_template.reg;
                                                     mailOptions.html += `Time: ${Date()} <br> Email: ${email} <br>Username: ${username}<br><br>Currently Registered Users: ${allDocs}`;
                                                     transporter.sendMail(mailOptions, (error, info) => {
                                                         if (error) {
