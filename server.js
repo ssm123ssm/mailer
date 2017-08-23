@@ -182,16 +182,16 @@ app.post('/signup', function (req, res) {
                                                     console.log(err);
                                                 } else {
                                                     var allDocs = all.length;
-                                                    let mailOptions = {
+                                                    var mailOptions2 = {
                                                         from: 'mailer', // sender address
-                                                        to: "ssm123ssm@gmail.com", // list of receivers
+                                                        to: "mailer.ssm.app@gmail.com", // list of receivers
                                                         subject: "New Registraion on Mailer!", // Subject line
                                                         text: "New Registraion on Mailer!", // plain text body
-                                                        html: mail_template.reg // html body
+                                                        html: mail_template.reg + `Time: ${Date()} <br> Email: ${email} <br>Username: ${username}<br><br>Currently Registered Users: ${allDocs}` // html body
                                                     };
                                                     console.log("\nALL DOCS: " + allDocs);
-                                                    mailOptions.html += `Time: ${Date()} <br> Email: ${email} <br>Username: ${username}<br><br>Currently Registered Users: ${allDocs}`;
-                                                    transporter.sendMail(mailOptions, (error, info) => {
+
+                                                    transporter.sendMail(mailOptions2, (error, info) => {
                                                         if (error) {
                                                             console.log("\nERROR IN NEW MAIL SENDING");
                                                             return console.log(error);
