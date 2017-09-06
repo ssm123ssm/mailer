@@ -8,8 +8,7 @@ A tool for getting form data on web pages as an email, without having to write a
 <img src="./test2.gif" style="width=100%;" alt="Mailer in Action">
 
 
-### [This is the app hosted on heroku](https://mailer-ssm.herokuapp.com)
-#### [Android App release 1.0](./app-release.apk) 
+### [This is the app hosted on heroku](https://mailer-ssm.herokuapp.com) 
 
 ### You don't even have to expose your email address in the form!
 
